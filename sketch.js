@@ -1,59 +1,79 @@
+const Engine=Matter.Engine;
+const World=Matter.World;
+const Events= Matter.Events;
+const Bodies=Matter.Bodies;
 
-const Engine = Matter.Engine;
-const World = Matter.World;
-const Bodies = Matter.Bodies;
-const Body = Matter.Body;
-
-function preload()
-{
-var engine,world,dustbin,paper;	
-}
-
+var particles =[];
+var plinkos =[];
+var divisions=[];
+var divisionHeight=[];
+var score=0;
 function setup() {
-	createCanvas(800, 400);
-    rectMode(CENTER);
-
-	engine = Engine.create();
-	world = engine.world;
-
-	
-
-	dustbin1=new dustbin(720,390,100,10);
-	paper1=new paper(100,300,10);
-	ground=Bodies.rectangle(width/2,400,width,10 ,{
-		isStatic:true
-	});
-		
-	World.add(world,ground);
+  createCanvas(800,400);
+engine = Engine.create();
+world=engine.world;
+ground=new Ground(width/2,height,width,20);
 
 
-	Engine.run(engine);
-  
+for (var i=0;i<=width;i=i+80){
+  divisions.push(new Divisions(i,height-divisionHeight/2,10,200))
 }
+
+
+for(var j =75; j<=width;j=j+50)
+{
+
+  plinkos.push(new Plinko(j,75));
+}
+
+for(var j =50; j<=width -10;j=j+50)
+{
+
+  plinkos.push(new Plinko(j,175));
+}
+
+for(var j =75; j<=width;j=j+50)
+{
+
+  plinkos.push(new Plinko(j,275));
+}
+
+for(var j =50; j<=width-10;j=j+50)
+{
+
+  plinkos.push(new Plinko(j,375));
+}
+
+
+
+
+}
+
 
 
 function draw() {
-  rectMode(CENTER);
-  background(0);
+  background("black");
+  textSize  (20);
+  //text("Score :"+score,20,30);
+  Engine.update(engine);
+  ground.display();
 
+  for( var k =0; k <plinkos.lenghth; k++){
 
-  paper1.display();
+    plinkos[k].display();
 
-  
-  drawSprites();
- 
+  }
+ if(frameCount%60===0){
+   particles.push(new Particle(random(100,700),10,10));
+   score++;
+ }
+
+ for (var j =0; j<particles.length; j++){
+
+  particles[j].display();
+ }
+ for (var k = 0;k< divisions.length; k++){
+
+  divisions[k].display();
+ }
 }
-function keyPressed(){
-if(keyCode=== UP_ARROW){
-	Matter.Body.applyForce(paper.body,paper.body.position,{
-		x:12 ,
-		y: -13
-
-	});
-}
-
-}
-
-
-
-
